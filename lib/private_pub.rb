@@ -1,6 +1,7 @@
 require "digest/sha1"
 require "net/http"
 require "net/https"
+require "yaml"
 
 require "private_pub/faye_extension"
 require "private_pub/engine" if defined? Rails
@@ -39,6 +40,7 @@ module PrivatePub
 
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = url.scheme == "https"
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE if config[:ssl_disable_verify]
       http.start {|h| h.request(form)}
     end
 
